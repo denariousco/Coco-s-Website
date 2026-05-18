@@ -330,9 +330,9 @@
             <h2 class="text-6xl md:text-8xl font-black mb-8 leading-none" data-t="contact.title">Get in Touch</h2>
             <p class="text-2xl md:text-3xl font-bold mb-16 opacity-90" data-t="contact.subtitle"></p>
             <div class="flex flex-col md:flex-row justify-center gap-8 text-ink">
-                <a href="mailto:yolingjun@gmail.com" class="flex-1 bg-white p-8 border-4 border-ink rounded-[3rem] card-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex flex-col items-center">
+                <a href="mailto:denariousco@gmail.com" onclick="copyEmail(event)" class="flex-1 bg-white p-8 border-4 border-ink rounded-[3rem] card-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex flex-col items-center">
                     <span class="text-xs uppercase tracking-widest font-black mb-4 opacity-50" data-t="contact.email">Email</span>
-                    <span class="text-2xl font-black">yolingjun@gmail.com</span>
+                    <span class="text-2xl font-black">denariousco@gmail.com</span>
                 </a>
                 <a href="https://www.instagram.com/denarious_co/" target="_blank" class="flex-1 bg-pop-yellow p-8 border-4 border-ink rounded-[3rem] card-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex flex-col items-center">
                     <span class="text-xs uppercase tracking-widest font-black mb-4 opacity-50">Instagram</span>
@@ -526,6 +526,27 @@
         function updateGallery() { document.getElementById('gallery-main').src = selectedProject.images[currentImageIndex]; }
         function nextGalleryImage() { currentImageIndex = (currentImageIndex + 1) % selectedProject.images.length; updateGallery(); }
         function prevGalleryImage() { currentImageIndex = (currentImageIndex - 1 + selectedProject.images.length) % selectedProject.images.length; updateGallery(); }
+        
+        async function copyEmail(event) {
+            event.preventDefault();
+            const email = "denariousco@gmail.com";
+            try {
+                await navigator.clipboard.writeText(email);
+                const span = event.currentTarget.querySelector('span:last-child');
+                const originalText = span.innerText;
+                span.innerText = "Copied!";
+                span.classList.add('text-pop-pink');
+                setTimeout(() => {
+                    span.innerText = originalText;
+                    span.classList.remove('text-pop-pink');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                // Fallback for environments where clipboard API might fail
+                window.location.href = "mailto:" + email;
+            }
+        }
+
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); document.getElementById('mobile-menu').classList.toggle('flex'); }
         window.onload = () => { changeLang('en'); lucide.createIcons(); };
     </script>
