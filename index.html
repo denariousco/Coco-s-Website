@@ -1,13 +1,382 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanjing (Coco) Su - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
 
+        .bg-grid {
+            background-image: radial-gradient(#2B2B2B 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.05;
+        }
+
+        .pixel-bg {
+            background-image: 
+                linear-gradient(45deg, #2B2B2B 2px, transparent 2px),
+                linear-gradient(-45deg, #2B2B2B 2px, transparent 2px);
+            background-size: 40px 40px;
+            opacity: 0.03;
+        }
+
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-bounce-slow {
+            animation: bounce-slow 3s infinite ease-in-out;
+        }
+
+        @keyframes float-continents {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(200px); }
+        }
+
+        .continents-animation {
+            animation: float-continents 20s linear infinite;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .card-shadow { box-shadow: 12px 12px 0px 0px #2B2B2B; }
+        .modal-shadow { box-shadow: 16px 16px 0px 0px #FFD600; }
+        .btn-shadow { box-shadow: 4px 4px 0px 0px #2B2B2B; }
+        .transition-all { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ink': '#2B2B2B',
+                        'pop-pink': '#FF0080',
+                        'pop-yellow': '#FFD600',
+                        'pop-green': '#00F0FF',
+                        'pop-purple': '#7000FF',
+                        'pop-red': '#FF3D00'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#FFFBEB] text-ink selection:bg-pop-yellow selection:text-ink">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 w-full z-40 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center bg-white/10 backdrop-blur-md border-4 border-ink rounded-[2rem] px-8 py-4 card-shadow">
+            <a href="#" class="text-2xl font-black tracking-tighter hover:scale-105 transition-transform">COCO<span class="text-pop-pink">.</span></a>
+            
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="nav-link font-black uppercase text-sm tracking-widest hover:text-pop-purple transition-colors" data-t="nav.about">About the Artist</a>
+                <a href="#projects" class="nav-link font-black uppercase text-sm tracking-widest hover:text-pop-purple transition-colors" data-t="nav.projects">Projects</a>
+                <a href="#contact" class="nav-link font-black uppercase text-sm tracking-widest hover:text-pop-purple transition-colors" data-t="nav.contact">Contact</a>
+                
+                <div class="flex items-center bg-ink/5 p-1 rounded-2xl border-2 border-ink gap-1">
+                    <button onclick="changeLang('en')" id="lang-en" class="px-3 py-1 text-xs font-black rounded-xl transition-all">EN</button>
+                    <button onclick="changeLang('cn')" id="lang-cn" class="px-3 py-1 text-xs font-black rounded-xl transition-all">CN</button>
+                    <button onclick="changeLang('jp')" id="lang-jp" class="px-3 py-1 text-xs font-black rounded-xl transition-all">JP</button>
+                </div>
+            </div>
+
+            <button onclick="toggleMobileMenu()" class="md:hidden p-2">
+                <i data-lucide="menu" class="w-8 h-8"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-50 bg-pop-pink hidden flex-col items-center justify-center space-y-8">
+        <button onclick="toggleMobileMenu()" class="absolute top-8 right-8 p-4 bg-white border-4 border-ink rounded-full">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <a href="#about" onclick="toggleMobileMenu()" class="text-4xl font-black text-white uppercase" data-t="nav.about">About</a>
+        <a href="#projects" onclick="toggleMobileMenu()" class="text-4xl font-black text-white uppercase" data-t="nav.projects">Projects</a>
+        <a href="#contact" onclick="toggleMobileMenu()" class="text-4xl font-black text-white uppercase" data-t="nav.contact">Contact</a>
+        <div class="flex gap-4 mt-8">
+            <button onclick="changeLang('en')" class="px-6 py-2 bg-white border-4 border-ink rounded-xl font-black">EN</button>
+            <button onclick="changeLang('cn')" class="px-6 py-2 bg-white border-4 border-ink rounded-xl font-black">CN</button>
+            <button onclick="changeLang('jp')" class="px-6 py-2 bg-white border-4 border-ink rounded-xl font-black">JP</button>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden bg-white">
+        <div class="absolute inset-0 bg-grid pointer-events-none"></div>
+        <div class="absolute top-1/4 left-10 w-24 h-24 bg-pop-yellow rounded-[2rem] border-4 border-ink rotate-12 animate-bounce-slow"></div>
+        <div class="absolute bottom-1/4 right-10 w-32 h-32 bg-pop-pink rounded-full border-4 border-ink -rotate-12 flex items-center justify-center hidden md:flex"><i data-lucide="sparkles" class="w-12 h-12 text-white"></i></div>
+        
+        <div class="max-w-7xl mx-auto w-full relative z-10 flex flex-col items-center text-center">
+            <div class="relative mb-12">
+                <div class="absolute -top-12 -left-12 w-24 h-24 bg-pop-green rounded-3xl border-4 border-ink -rotate-12 flex items-center justify-center">
+                    <i data-lucide="palette" class="w-10 h-10"></i>
+                </div>
+                <h1 id="hero-title" class="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-none" data-t="hero.title">
+                    Hi! I'm Wanjing (Coco) Su
+                </h1>
+            </div>
+            <p id="hero-subtitle" class="text-xl md:text-3xl font-bold max-w-3xl mb-12 text-ink/70" data-t="hero.subtitle"></p>
+            <a href="#projects" class="group relative px-10 py-5 bg-pop-purple text-white font-black text-xl uppercase tracking-widest rounded-[2rem] border-4 border-ink shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
+                <span data-t="hero.cta">Check my works!</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="py-32 px-6 md:px-12 bg-[#FFFBEB] relative overflow-hidden border-y-8 border-ink">
+        <div class="absolute inset-0 pixel-bg pointer-events-none"></div>
+        <div class="max-w-6xl mx-auto relative z-10 flex flex-col lg:flex-row items-center gap-16">
+            <div class="bg-pop-yellow p-8 md:p-12 border-8 border-ink rounded-[4rem] card-shadow flex-1">
+                <h2 class="text-4xl md:text-6xl font-black mb-8 text-ink" data-t="about.title">About Me</h2>
+                <div id="about-desc" class="text-xl md:text-2xl font-bold leading-relaxed text-ink/80 whitespace-pre-line" data-t="about.description"></div>
+                <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="bg-white border-4 border-ink p-4 rounded-3xl text-center font-black text-pop-purple hover:-translate-y-2 transition-transform">Playful</div>
+                    <div class="bg-white border-4 border-ink p-4 rounded-3xl text-center font-black text-pop-purple hover:-translate-y-2 transition-transform">Colorful</div>
+                    <div class="bg-white border-4 border-ink p-4 rounded-3xl text-center font-black text-pop-purple hover:-translate-y-2 transition-transform">Bold</div>
+                    <div class="bg-white border-4 border-ink p-4 rounded-3xl text-center font-black text-pop-purple hover:-translate-y-2 transition-transform">Creative</div>
+                </div>
+            </div>
+            <div class="relative shrink-0 w-64 h-64 md:w-80 md:h-80">
+                <div class="relative w-full h-full rounded-full border-8 border-ink overflow-hidden bg-white shadow-[12px_12px_0px_0px_#2B2B2B]">
+                    <div class="absolute inset-0 bg-pop-purple/20"></div>
+                    <div class="absolute inset-0 flex items-center continents-animation">
+                        <div class="flex space-x-12 shrink-0">
+                            <div class="relative w-32 h-24 bg-pop-yellow border-4 border-ink rounded-full -rotate-12 translate-y-4"></div>
+                            <div class="relative w-16 h-16 bg-pop-pink border-4 border-ink rounded-full translate-y-12"></div>
+                            <div class="relative w-24 h-32 bg-pop-yellow border-4 border-ink rounded-full rotate-45 -translate-y-8"></div>
+                            <div class="relative w-32 h-24 bg-pop-yellow border-4 border-ink rounded-full -rotate-12 translate-y-4"></div>
+                            <div class="relative w-16 h-16 bg-pop-pink border-4 border-ink rounded-full translate-y-12"></div>
+                            <div class="relative w-24 h-32 bg-pop-yellow border-4 border-ink rounded-full rotate-45 -translate-y-8"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-32 px-6 md:px-12 bg-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto relative z-10 w-full">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 space-y-8 md:space-y-0">
+                <h2 class="text-5xl md:text-7xl font-black tracking-tight" data-t="projects.title">Projects</h2>
+                <div class="flex flex-wrap gap-4" id="project-filters"></div>
+            </div>
+            <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"></div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-32 px-6 md:px-12 bg-pop-pink text-white border-t-8 border-ink">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-6xl md:text-8xl font-black mb-8 leading-none" data-t="contact.title">Get in Touch</h2>
+            <p class="text-2xl md:text-3xl font-bold mb-16 opacity-90" data-t="contact.subtitle"></p>
+            <div class="flex flex-col md:flex-row justify-center gap-8 text-ink">
+                <a href="mailto:yolingjun@gmail.com" class="flex-1 bg-white p-8 border-4 border-ink rounded-[3rem] card-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex flex-col items-center">
+                    <span class="text-xs uppercase tracking-widest font-black mb-4 opacity-50" data-t="contact.email">Email</span>
+                    <span class="text-2xl font-black">yolingjun@gmail.com</span>
+                </a>
+                <div class="flex-1 bg-pop-yellow p-8 border-4 border-ink rounded-[3rem] card-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex flex-col items-center">
+                    <span class="text-xs uppercase tracking-widest font-black mb-4 opacity-50" data-t="contact.social">Social</span>
+                    <div class="flex space-x-6 mt-2">
+                        <a href="https://www.instagram.com/toldaboutboredgames/" target="_blank" class="hover:scale-110 transition-transform"><i data-lucide="instagram" class="w-8 h-8"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Modal -->
+    <div id="modal-overlay" class="fixed inset-0 z-50 hidden flex items-center justify-center p-6 bg-ink/80 backdrop-blur-sm" onclick="closeModal()">
+        <div id="modal-content" class="bg-white border-8 border-ink rounded-[3.5rem] max-w-4xl w-full max-h-[90vh] overflow-y-auto relative modal-shadow no-scrollbar" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="fixed md:absolute top-8 right-8 p-4 bg-pop-pink border-4 border-ink rounded-full z-20"><i data-lucide="x" class="w-8 h-8 text-ink"></i></button>
+            <div class="p-8 md:p-12">
+                <div id="modal-media" class="aspect-video w-full rounded-[3rem] border-4 border-ink overflow-hidden mb-12 shadow-[12px_12px_0px_0px_#2B2B2B] bg-ink relative"></div>
+                <div class="space-y-6">
+                    <div>
+                        <p id="modal-category" class="text-sm uppercase tracking-widest font-black opacity-60 mb-2"></p>
+                        <h2 id="modal-title" class="text-4xl md:text-6xl font-black text-ink"></h2>
+                    </div>
+                    <p id="modal-description" class="text-xl md:text-2xl font-bold leading-relaxed whitespace-pre-wrap"></p>
+                    <p id="modal-detail" class="text-lg leading-relaxed text-ink/70 whitespace-pre-wrap"></p>
+                    <div id="gallery-container" class="pt-8 space-y-4 hidden">
+                        <div class="relative aspect-video rounded-[3rem] border-4 border-ink overflow-hidden shadow-[12px_12px_0px_0px_#2B2B2B] bg-white flex items-center justify-center">
+                            <img id="gallery-main" src="" class="max-w-full max-h-full object-contain">
+                            <button onclick="prevGalleryImage()" class="absolute left-6 top-1/2 -translate-y-1/2 p-3 bg-white border-4 border-ink rounded-2xl"><i data-lucide="chevron-left" class="w-8 h-8"></i></button>
+                            <button onclick="nextGalleryImage()" class="absolute right-6 top-1/2 -translate-y-1/2 p-3 bg-pop-yellow border-4 border-ink rounded-2xl"><i data-lucide="chevron-right" class="w-8 h-8"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                nav: { home: "Home", about: "About the Artist", projects: "Projects", contact: "Contact" },
+                about: { title: "About Me", description: "Creator / Innovator / Color Addict.\n\nExpert at transforming \"chaos\" into art, crafting visual experiences that are playful, innovative, and beautifully unpredictable.\n\nEducation: MA, Royal College of Art (RCA) & BFA, Maryland Institute College of Art (MICA)." },
+                hero: { title: "Hi! I'm Wanjing (Coco) Su", subtitle: "Bringing characters to life with vibrant colors and happy shapes! Let's make something fun.", cta: "Check my works!" },
+                projects: { title: "Projects", filterAll: "All", filterUI: "Illustrations", filterBranding: "Experimental", filterWeb: "Collaborations" },
+                contact: { title: "Get in Touch", subtitle: "Let's create something extraordinary together.", email: "Email", social: "Social" }
+            },
+            cn: {
+                nav: { home: "首页", about: "关于作者", projects: "项目作品", contact: "联络我" },
+                about: { title: "关于我", description: "创作者 / 创新者 / 色彩控。\n\n擅长将“错乱”转化为艺术，打造富于趣味、创新且富有美感的视觉体验。\n\n教育背景：英国皇家艺术学院 (RCA) 硕士 & 马里兰艺术学院 (MICA) 学士。" },
+                hero: { title: "嗨！我是苏琬婧 (Coco)", subtitle: "用鲜艳的色彩和快乐的图形给角色注入灵魂！让我们一起创造快乐吧。", cta: "查看我的作品！" },
+                projects: { title: "项目作品", filterAll: "全部", filterUI: "插画词", filterBranding: "实验性", filterWeb: "合作项目" },
+                contact: { title: "保持联系", subtitle: "让我们一起创造非凡的作品。", email: "邮箱", social: "社交媒体" }
+            },
+            jp: {
+                nav: { home: "ホーム", about: "アーティストについて", projects: "プロジェクト", contact: "お問い合わせ" },
+                about: { title: "私について", description: "クリエイター / イノベーター / カラー中毒者。\n\n「カオス」をアートに変える専門家。遊び心があり、革新的で、美しく予測不可能な視覚体験を創り出します。\n\nEducation: MA, Royal College of Art (RCA) & BFA, Maryland Institute College of Art (MICA)." },
+                hero: { title: "こんにちは！Wanjing (Coco) Suです", subtitle: "鮮やかな色とハッピーな形でキャラクターに命を吹き込みます！一緒に楽しいものを作りましょう。", cta: "作品をチェック！" },
+                projects: { title: "プロジェクト", filterAll: "すべて", filterUI: "イラスト", filterBranding: "実験プロジェクト", filterWeb: "コラボレーション" },
+                contact: { title: "お問い合わせ", subtitle: "一緒に素晴らしいものを作りましょう。", email: "メール", social: "ソーシャルメディア" }
+            }
+        };
+
+        const projectsData = [
+            { id: 7, category: "Collaborations", image: "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-04-25%20105610.jpg", videoUrl: "https://youtu.be/_nxpm4MiTmQ", langKey: "photoHunt" },
+            { id: 8, category: "Experimental", image: "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-04-25%20112455.jpg", videoUrl: "https://youtu.be/6KJFA7b-eeY", langKey: "msReconsideration", images: [ "https://raw.githubusercontent.com/denariousco/Profile/2b90b266cad427d4718bab9a476844d6c1299456/10.301600.jpg", "https://github.com/denariousco/Profile/blob/6b8cdebdec013bd575cb58ef21f46e8f5aa7680b/10.301609.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/10.301591.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/10.301624.jpg?raw=true" ] },
+            { id: 9, category: "Illustrations", image: "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/111.jpg", langKey: "rusticOnes", images: [ "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/222.jpg", "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/333.jpg" ] },
+            { id: 10, category: "Collaborations", image: "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/across2.jpg", videoUrl: "https://www.youtube.com/watch?v=Ca2a30ltVmE", langKey: "pixelsCantBeatPaint", images: [ "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/across6.jpeg", "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/across7.jpeg", "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/across8.jpeg", "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/across9.jpeg" ] },
+            { id: 11, category: "Experimental", image: "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/eye1.jpg", langKey: "undetectedWatch", images: [ "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/SecurityCam_Coco.jpg", "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/22-.jpg", "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/3re-.jpg", "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/22re-.jpg", "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/eye3.jpg", "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/eye2.jpg", "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/_MG_2248.jpg", "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/_MG_2303.jpg", "https://github.com/denariousco/Profile/blob/main/_MG_2250.jpg?raw=true" ] },
+            { id: 12, category: "Illustrations", image: "https://raw.githubusercontent.com/denariousco/Profile/refs/heads/main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-05-18%20214013.jpg", langKey: "entomophobiaIssues", images: [ "https://github.com/denariousco/Profile/blob/main/%E5%9B%BE%E7%89%871.png?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%9B%BE%E7%89%872.png?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%9B%BE%E7%89%873.png?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%9B%BE%E7%89%874.png?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%9B%BE%E7%89%875.png?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%9B%BE%E7%89%876.png?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%9B%BE%E7%89%877.png?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%9B%BE%E7%89%878.png?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%9B%BE%E7%89%879.png?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%9B%BE%E7%89%8710.png?raw=true" ] },
+            { id: 13, category: "Experimental", image: "https://github.com/denariousco/Profile/blob/main/Wanjing_CocoSuInternet-BBsitting.jpg?raw=true", videoUrl: "https://youtu.be/EPL-w9QQaAs", langKey: "huntedTales" },
+            { id: 14, category: "Illustrations", image: "https://github.com/denariousco/Profile/blob/main/%E6%8F%92%E5%9C%9625.jpg?raw=true", status: "In-Progress", langKey: "rainbowLimboPark", images: [ "https://github.com/denariousco/Profile/blob/main/R1%20(1).jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/R1%20(2).jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/R1%20(3).jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/R1%20(4).jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/R1%20(5).jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/R1%20(6).jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/R1%20(7).jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240411185217.jpg?raw=true" ] },
+            { id: 15, category: "Collaborations", image: "https://github.com/denariousco/Profile/blob/main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-05-18%20230617.jpg?raw=true", langKey: "atTheWatersEdge", images: [ "https://github.com/denariousco/Profile/blob/main/_MG_4854.JPG?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190901224547.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190901224613.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/_MG_4867.JPG?raw=true", "https://github.com/denariousco/Profile/blob/main/_MG_4864.JPG?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190901224625.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/54463781_1026488320883097_7770837152963035969_n.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/55847242_429624291132267_8012202404546562681_n.jpg?raw=true" ] },
+            { id: 16, category: "Illustrations", image: "https://github.com/denariousco/Profile/blob/main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-05-18%20231118.jpg?raw=true", langKey: "renaissanceBetween0to1", images: [ "https://github.com/denariousco/Profile/blob/main/T13881%20(2).jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/T13881%20(6).jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/T13881%20(8).jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/2_1.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/3_1.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/4_1.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/5_1.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/6_2.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/7_2.jpg?raw=true" ] },
+            { id: 17, category: "Collaborations", image: "https://github.com/denariousco/Profile/blob/main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-05-18%20231439.jpg?raw=true", langKey: "musicPopOsaka", images: [ "https://github.com/denariousco/Profile/blob/main/linewithcolor_transbackground.png?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%B7%B4%E6%89%8E%E5%98%BF%E7%B4%A0%E6%9D%9024.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%B7%B4%E6%89%8E%E5%98%BF%E7%B4%A0%E6%9D%9044.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%B7%B4%E6%89%8E%E5%98%BF%E7%B4%A0%E6%9D%9031.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20231219232528.jpg?raw=true", "https://github.com/denariousco/Profile/blob/main/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20231227191723.jpg?raw=true" ] },
+        ];
+
+        const i18nProjects = {
+            en: {
+                photoHuntTitle: "Photo Hunt Workshop", photoHuntDesc: "A creative group collaboration workshop exploring photography with middle school students.", photoHuntDetail: "Photo Hunt Workshop was a collaborative group project within the Royal College of Art, School of Communication in 2026. Our group invited students from Phoenix High School to visit our studio space and explore the possibilities of experiencing different types of cameras.",
+                msReconsiderationTitle: "M's Reconsideration", msReconsiderationDesc: "An experimental video project based on an original story about the Internet culture changes the life of the Minotaur.", msReconsiderationDetail: "The concept of the Internet meme is a complex and highly informative idea. I created a short fantasy film featuring a meme victim - a minotaur monster who is betrayed by society.",
+                rusticOnesTitle: "Rustic Ones", rusticOnesDesc: "An Esugoroku-like board game collection exploring rustic fashion styles.", rusticOnesDetail: "I designed an Esugoroku(絵双六) board game named Rustic Ones to make the players think about the historical causes and psychological factors of rustic and fashion.",
+                pixelsCantBeatPaintTitle: "Pixels Can't Beat Paint", pixelsCantBeatPaintDesc: "A interdisciplinary collaborative project in RCA, AcrossRCA 2026.", pixelsCantBeatPaintDetail: "‘Pixels can’t beat Paint’ is an analogy of rumors, fake news, and misinformation in cyberspace.",
+                undetectedWatchTitle: "Undetected Watch", undetectedWatchDesc: "Project exploring surveillance and the concept of the 'unseen'.", undetectedWatchDetail: "Combining digital painting and pixel art techniques, trying to make the viewer think about the impact of surveillance.",
+                entomophobiaIssuesTitle: "The Entomophobia Issues", entomophobiaIssuesDesc: "Illustration series exploring the fear of insects.", entomophobiaIssuesDetail: "Created four story records analysing stories about my relationship with entomophobia, confronting my own fearfulness.",
+                huntedTalesTitle: "Hunted Tales of White City", huntedTalesDesc: "Narrative project exploring hidden stories and urban legends.", huntedTalesDetail: "Experimental film for the one-year anniversary of the relocation of the RCA’s White City campus.",
+                rainbowLimboParkTitle: "Rainbow Limbo Park", rainbowLimboParkDesc: "Original comic series exploring surreal characters.", rainbowLimboParkDetail: "Tells a story of a young demon Buro who joins his cousin Bu, who runs an amusement park in Limbo Hell.",
+                atTheWatersEdgeTitle: "At the Water's Edge", atTheWatersEdgeDesc: "Group theater project exploring boundaries between nature and urban spaces.", atTheWatersEdgeDetail: "Role as the stage and prop designer. It emerges from Shakespeare’s Tempest as the world encounters climate change.",
+                renaissanceBetween0to1Title: "Renaissance Between 0 to 1", renaissanceBetween0to1Desc: "Digital illustrations exploring digital rebirth.", renaissanceBetween0to1Detail: "Today’s digital era is facing a contradiction between humanism and technical progress.",
+                musicPopOsakaTitle: "Music POP Osaka", musicPopOsakaDesc: "Exploring the music scene and pop culture in Osaka.", musicPopOsakaDetail: "Japan is a prominent Asian country where pop culture thrives. Collaborated with local bands and live houses.\n\n(told about) Bored Games Instagram page: https://www.instagram.com/toldaboutboredgames/"
+            },
+            cn: {
+                photoHuntTitle: "Photo Hunt Workshop", photoHuntDesc: "与中学生一起探索摄影的创意小组合作工作坊。", photoHuntDetail: "摄影寻宝工作坊是 2026 年英国皇家艺术学院 (RCA) 传播学院内的一个小组合作项目。",
+                msReconsiderationTitle: "M's Reconsideration", msReconsiderationDesc: "讲述了互联网文化如何改变了米诺陶洛斯的生活。", msReconsiderationDetail: "通过思考现实生活中的案例，我决定制作一部短篇奇幻电影，主角是一个米诺陶洛斯怪物。",
+                rusticOnesTitle: "Rustic Ones", rusticOnesDesc: "一个类绘双六（Esugoroku）棋盘游戏系列，探索乡村时尚风格。", rusticOnesDetail: "旨在让玩家思考“土气”与“时尚”的历史原因和心理因素。",
+                pixelsCantBeatPaintTitle: "Pixels Can't Beat Paint", pixelsCantBeatPaintDesc: "英国皇家艺术学院（RCA）的跨学科合作项目。", pixelsCantBeatPaintDetail: "表达了在信息过载以及节奏快、注意力短暂的数字文化背景下，真实性丧失的现状。",
+                undetectedWatchTitle: "Undetected Watch", undetectedWatchDesc: "探索监控与“未见之物”概念的实验性项目。", undetectedWatchDetail: "监控本质上具有“上帝视角”的特征，其存在强化了令人感到不适的属性。",
+                entomophobiaIssuesTitle: "The Entomophobia Issues", entomophobiaIssuesDesc: "插画系列，通过视觉叙事探索昆虫恐惧。", entomophobiaIssuesDetail: "分析了我与昆虫恐惧症的关系，直面自己的恐惧，试图探索其根源。",
+                huntedTalesTitle: "Hunted Tales of White City", huntedTalesDesc: "探索白城（White City）隐藏故事和都市传说。", huntedTalesDetail: "为纪念英国皇家艺术学院（RCA）白城校区搬迁一周年而创作的实验电影。",
+                rainbowLimboParkTitle: "Rainbow Limbo Park", rainbowLimboParkDesc: "插画系列，探索彩色游乐场中的超现实角色。", rainbowLimboParkDetail: "年轻的恶魔 Buro 来投靠他的表哥 Bu。Bu 在地狱边境经营着一家游乐场。",
+                atTheWatersEdgeTitle: "At the Water's Edge", atTheWatersEdgeDesc: "探索自然与城市空间边界的小组戏剧项目。", atTheWatersEdgeDetail: "参与了 MICA 2019 年的年度剧目《At the Water’s Edge》，担任舞台和道具设计师。",
+                renaissanceBetween0to1Title: "Renaissance Between 0 to 1", renaissanceBetween0to1Desc: "探索数字重生和像素美学的数字插画系列。", renaissanceBetween0to1Detail: "文艺复兴跨越 14 至 16 世纪，在欧洲孕育了人文主义理想。",
+                musicPopOsakaTitle: "Music POP Osaka", musicPopOsakaDesc: "一个探索大阪音乐场景和流行文化的合作项目。", musicPopOsakaDetail: "这段创意之旅让我更好地了解了当今日本年轻人的群体，见证了他们对社会压力和偏见的反抗。\n\n(told about) Bored Games Instagram 页面：https://www.instagram.com/toldaboutboredgames/"
+            },
+            jp: {
+                photoHuntTitle: "Photo Hunt Workshop", photoHuntDesc: "中学生を対象に写真撮影を探求するワークショップ。", photoHuntDetail: "2026年にロイヤル・カレッジ・オブ・アート（RCA）で行われた共同グループプロジェクトでした。",
+                msReconsiderationTitle: "M's Reconsideration", msReconsiderationDesc: "インターネット文化がミノタウロスの生活を変えるというオリジナルストーリー。", msReconsiderationDetail: "実生活の事例を考えることで、ミノタウロスの怪物を通して、現代のインターネットのルールを問う作品。",
+                rusticOnesTitle: "Rustic Ones", rusticOnesDesc: "「土気」ファッションスタイルの定義を探求する双六。", rusticOnesDetail: "土気とファッションの歴史的原因と心理的要因について考えるきっかけを作りました。",
+                pixelsCantBeatPaintTitle: "Pixels Can't Beat Paint", pixelsCantBeatPaintDesc: "ロイヤル・カレッジ・オブ・アート（RCA）におけるコラボレーション。", pixelsCantBeatPaintDetail: "サイバースペースにおける噂、フェイクニュース、誤報のメタファーです。",
+                undetectedWatchTitle: "Undetected Watch", undetectedWatchDesc: "監視と「見えないもの」の概念を探求するプロジェクト。", undetectedWatchDetail: "監視は本質的に「神の視点」として特徴づけられ、その特性を強化しています。",
+                entomophobiaIssuesTitle: "The Entomophobia Issues", entomophobiaIssuesDesc: "昆虫への恐怖を探求するイラストシリーズ。", entomophobiaIssuesDetail: "昆虫恐怖症との関係を分析する4つのストーリー。その根源を探るために自分自身の恐怖に向き合った。",
+                huntedTalesTitle: "Hunted Tales of White City", huntedTalesDesc: "ホワイトシティの隠された物語や都市伝説を探索。", huntedTalesDetail: "RCAのホワイトシティ・キャンパス移転1周年を記念して制作された実験映画です。",
+                rainbowLimboParkTitle: "Rainbow Limbo Park", rainbowLimboParkDesc: "カラフルな遊び場で超現実的なキャラクターを探索。", rainbowLimboParkDetail: "若い悪魔のブロが、いとこのブの手伝いをするためにやってくるところから始まります。",
+                atTheWatersEdgeTitle: "At the Water's Edge", atTheWatersEdgeDesc: "自然と都市空間の境界を探求するグループ演劇プロジェクト。", atTheWatersEdgeDetail: "2019年恒例の舞台『At the Water's Edge』にステージおよび小道具デザイナーとして参加。",
+                renaissanceBetween0to1Title: "Renaissance Between 0 to 1", renaissanceBetween0to1Desc: "デジタルの再生とピクセル美学を探求するイラスト。", renaissanceBetween0to1Detail: "14世紀から16世紀にかけてのルネサンスは、人間主義的な理想を誕生させました。",
+                musicPopOsakaTitle: "Music POP Osaka", musicPopOsakaDesc: "大阪の音楽シーンとポップカルチャーを探求するプロジェクト。", musicPopOsakaDetail: "日本はポップカルチャーが繁栄している国であり、大阪は国内の他の場所とは異なる独特の活気に満ちています。\n\n(told about) Bored Games Instagram ページ: https://www.instagram.com/toldaboutboredgames/"
+            }
+        };
+
+        let currentLang = 'en';
+        let currentFilter = 'All';
+        let selectedProject = null;
+        let currentImageIndex = 0;
+
+        function changeLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[id^="lang-"]').forEach(btn => btn.classList.remove('bg-pop-purple', 'text-white'));
+            document.getElementById('lang-' + lang).classList.add('bg-pop-purple', 'text-white');
+            updateUI();
+        }
+
+        function updateUI() {
+            const t = translations[currentLang];
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                const keys = key.split('.');
+                let val = t;
+                keys.forEach(k => val = val[k]);
+                el.innerText = val;
+            });
+            const filterContainer = document.getElementById('project-filters');
+            const pt = t.projects;
+            const filters = [ { t: 'All', l: pt.filterAll }, { t: 'Illustrations', l: pt.filterUI }, { t: 'Experimental', l: pt.filterBranding }, { t: 'Collaborations', l: pt.filterWeb } ];
+            filterContainer.innerHTML = filters.map(f => `
+                <button onclick="setFilter('${f.t}')" class="px-6 py-3 text-sm font-bold transition-all rounded-2xl border-4 ${currentFilter === f.t ? 'bg-pop-purple text-white border-ink shadow-[4px_4px_0px_0px_#2B2B2B]' : 'bg-white text-ink border-ink/10 hover:border-ink shadow-[4px_4px_0px_0px_transparent] hover:shadow-[4px_4px_0px_0px_#2B2B2B]'}">${f.l}</button>
+            `).join('');
+            renderProjects();
+        }
+
+        function setFilter(f) { currentFilter = f; updateUI(); }
+
+        function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            const filtered = projectsData.filter(p => currentFilter === 'All' || p.category.includes(currentFilter));
+            grid.innerHTML = filtered.map((p, i) => {
+                const pj = i18nProjects[currentLang];
+                return `
+                <div class="group cursor-pointer" onclick="openModal(${p.id})">
+                    <div class="relative overflow-hidden aspect-square rounded-[2.5rem] mb-6 border-4 border-ink shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all group-hover:shadow-none group-hover:translate-x-2 group-hover:translate-y-2 ${i % 3 === 0 ? 'bg-pop-pink' : i % 3 === 1 ? 'bg-pop-yellow' : 'bg-pop-green'}">
+                        <img src="${p.image}" class="w-full h-full object-cover p-4 rounded-[3rem]">
+                        <div class="absolute top-6 right-6 w-12 h-12 bg-white rounded-full border-4 border-ink flex items-center justify-center font-bold text-lg shadow-lg">★</div>
+                    </div>
+                    <div class="space-y-2 px-2">
+                        <p class="text-xs uppercase tracking-widest font-black opacity-60">${p.category}</p>
+                        <h3 class="text-2xl font-black">${pj[p.langKey + 'Title']}</h3>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function openModal(id) {
+            selectedProject = projectsData.find(p => p.id === id);
+            currentImageIndex = 0;
+            const pj = i18nProjects[currentLang];
+            document.getElementById('modal-title').innerText = pj[selectedProject.langKey + 'Title'];
+            document.getElementById('modal-category').innerText = selectedProject.category;
+            document.getElementById('modal-description').innerText = pj[selectedProject.langKey + 'Desc'];
+            document.getElementById('modal-detail').innerText = pj[selectedProject.langKey + 'Detail'];
+            document.getElementById('modal-media').innerHTML = selectedProject.videoUrl 
+                ? `<iframe src="${getEmbedUrl(selectedProject.videoUrl)}" class="w-full h-full" allowfullscreen></iframe>`
+                : `<img src="${selectedProject.image}" class="w-full h-full object-cover">`;
+            const gal = document.getElementById('gallery-container');
+            if (selectedProject.images) { gal.classList.remove('hidden'); updateGallery(); } else { gal.classList.add('hidden'); }
+            document.getElementById('modal-overlay').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            lucide.createIcons();
+        }
+
+        function closeModal() { document.getElementById('modal-overlay').classList.add('hidden'); document.body.classList.remove('overflow-hidden'); document.getElementById('modal-media').innerHTML = ''; }
+        function getEmbedUrl(u) { const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return m ? `https://www.youtube.com/embed/${m[2]}` : u; }
+        function updateGallery() { document.getElementById('gallery-main').src = selectedProject.images[currentImageIndex]; }
+        function nextGalleryImage() { currentImageIndex = (currentImageIndex + 1) % selectedProject.images.length; updateGallery(); }
+        function prevGalleryImage() { currentImageIndex = (currentImageIndex - 1 + selectedProject.images.length) % selectedProject.images.length; updateGallery(); }
+        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); document.getElementById('mobile-menu').classList.toggle('flex'); }
+        window.onload = () => { changeLang('en'); lucide.createIcons(); };
+    </script>
+</body>
+</html>
